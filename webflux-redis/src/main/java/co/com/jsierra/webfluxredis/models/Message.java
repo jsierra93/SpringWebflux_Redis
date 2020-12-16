@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Message {
-    private int id;
+    private String id;
     private String message;
 }

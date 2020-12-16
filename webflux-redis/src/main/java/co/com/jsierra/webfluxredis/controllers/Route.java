@@ -18,8 +18,8 @@ public class Route {
     public RouterFunction<ServerResponse> router(Handler handler) {
         return route(
                 GET(PATH + "/{key}").and(accept(MediaType.APPLICATION_JSON)), handler::getValue)
-                .andRoute(POST(PATH + "/{key}").and(accept(MediaType.APPLICATION_JSON)), handler::save)
-                .andRoute(DELETE(PATH + "/{key}").and(accept(MediaType.APPLICATION_JSON)), handler::delete
+                .andRoute(POST(PATH + "/{key}").and(accept(MediaType.APPLICATION_JSON)), handler::saveValue)
+                .andRoute(DELETE(PATH + "/{key}").and(accept(MediaType.APPLICATION_JSON)), handler::deleteValue
                 );
     }
 }

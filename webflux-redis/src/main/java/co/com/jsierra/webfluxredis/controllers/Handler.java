@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
 import static org.springframework.web.reactive.function.BodyExtractors.toMono;
 
 @Slf4j
@@ -17,10 +16,13 @@ public class Handler {
     @Autowired
     private MessageRedisService messageRedisService;
 
-
-    public Mono<ServerResponse> save(ServerRequest serverRequest) {
+    public Mono<ServerResponse> saveValue(ServerRequest serverRequest) {
         String key = serverRequest.pathVariable("key");
         Mono<Boolean> message = serverRequest.body(toMono(Message.class))//toMono es un extractor
+             /*   .map( msg -> {
+                    msg.setId(UUID.randomUUID().toString());
+                    return msg;
+                })*/
                 .flatMap( msg ->  messageRedisService.put(key, msg));
 
         return ServerResponse
@@ -35,7 +37,7 @@ public class Handler {
                 .body(messageRedisService.get(key), Message.class);
     }
 
-    public Mono<ServerResponse> delete(ServerRequest serverRequest) {
+    public Mono<ServerResponse> deleteValue(ServerRequest serverRequest) {
         String key = serverRequest.pathVariable("key");
         return ServerResponse
                 .ok()
