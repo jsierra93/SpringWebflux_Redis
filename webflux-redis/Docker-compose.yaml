@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+  redis-local:
+    image: redis
+    ports:
+    - "6379:6379"
+
+  service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+    - "8086:8086"
+    environment:
+      - SPRING_REDIS_HOST=redis-local
+    depends_on:
+      - redis-local
