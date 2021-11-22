@@ -5,6 +5,7 @@ import co.com.jsierra.webfluxredis.services.MessageRedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -16,18 +17,15 @@ public class Handler {
     @Autowired
     private MessageRedisService messageRedisService;
 
+
     public Mono<ServerResponse> saveValue(ServerRequest serverRequest) {
         String key = serverRequest.pathVariable("key");
-        Mono<Boolean> message = serverRequest.body(toMono(Message.class))//toMono es un extractor
-             /*   .map( msg -> {
-                    msg.setId(UUID.randomUUID().toString());
-                    return msg;
-                })*/
+        Mono<Message> message = serverRequest.body(toMono(Message.class))
                 .flatMap( msg ->  messageRedisService.put(key, msg));
 
         return ServerResponse
-                .ok()
-                .body(message, Boolean.class);
+                .status(HttpStatus.CREATED)
+                .body(message, Message.class);
     }
 
     public Mono<ServerResponse> getValue(ServerRequest serverRequest) {

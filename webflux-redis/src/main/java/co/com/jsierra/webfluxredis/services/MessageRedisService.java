@@ -14,8 +14,9 @@ public class MessageRedisService {
     @Autowired
     private ReactiveRedisTemplate<String, Message> redisTemplate;
 
-    public Mono<Boolean> put(String key, Message message) {
+    public Mono<Message> put(String key, Message message) {
         return redisTemplate.opsForValue().set(key, message)
+                .map( val -> message)
                 .doFinally(val -> log.info("Save: key {} , value: {}", key, message ));
     }
 
